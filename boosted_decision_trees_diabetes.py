@@ -47,10 +47,10 @@ test_accuracy_std = np.std(test_scores, axis=1)
 
 # Plotting Learning Curve
 plt.subplot(1, 2, 1)
-plt.plot(train_sizes, train_accuracy_mean, label='Training Accuracy', marker='o')
+plt.plot(train_sizes, train_accuracy_mean, label="Training Accuracy", color="darkorange", marker='o')
 plt.fill_between(train_sizes, train_accuracy_mean - train_accuracy_std, train_accuracy_mean + train_accuracy_std, alpha=0.1, color="r")
 
-plt.plot(train_sizes, test_accuracy_mean, label='Cross-validation Accuracy', marker='o')
+plt.plot(train_sizes, test_accuracy_mean, label="Cross-validation Accuracy", color="navy", marker='o')
 plt.fill_between(train_sizes, test_accuracy_mean - test_accuracy_std, test_accuracy_mean + test_accuracy_std, alpha=0.1, color="g")
 
 plt.xlabel('Training Size')

@@ -11,7 +11,7 @@ train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-
 
 df = pd.read_csv(train_data)
 train_data= df.drop(columns=['id'],axis=1)
-train_data["diagnosis"] = train_data["diagnosis"].replace({'M':1,'B':2})
+train_data["diagnosis"] = train_data["diagnosis"].replace({'M':1,'B':0})
 
 X,y = df.drop(['diagnosis'], axis = 1), df['diagnosis']
 
