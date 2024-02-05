@@ -13,7 +13,7 @@ X,y = df.drop(['Diabetes_binary'], axis = 1), df['Diabetes_binary']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Define the Random Forest model
-random_forest_model = RandomForestClassifier(max_depth=4, n_estimators=2000, random_state=42)
+random_forest_model = RandomForestClassifier(max_depth=5, n_estimators=1000, random_state=42)
 
 # Learning Curve
 train_sizes, train_scores, test_scores = learning_curve(random_forest_model, X_train, y_train, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring='accuracy')
@@ -28,7 +28,7 @@ plt.legend()
 plt.show()
 
 # Validation Curve
-param_range = [100, 200, 500, 1000, 1500, 2000, 5000]  # Adjust the range based on your needs
+param_range = [100, 200, 500, 1000, 2000]  # Adjust the range based on your needs
 train_scores, test_scores = validation_curve(random_forest_model, X_train, y_train, param_name='n_estimators', param_range=param_range, cv=5, scoring='accuracy')
 
 plt.figure(figsize=(10, 6))

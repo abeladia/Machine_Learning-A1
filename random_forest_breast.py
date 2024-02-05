@@ -16,7 +16,7 @@ X,y = df.drop(['diagnosis'], axis = 1), df['diagnosis']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Define the Random Forest model
-random_forest_model = RandomForestClassifier(max_depth=2, n_estimators=1500, random_state=42)
+random_forest_model = RandomForestClassifier(max_depth=2, n_estimators=2000, random_state=42)
 
 # Learning Curve
 train_sizes, train_scores, test_scores = learning_curve(random_forest_model, X_train, y_train, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring='accuracy')
