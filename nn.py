@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import learning_curve, validation_curve, train_test_split
-from sklearn.neural_network import MLPClassifier,
+from sklearn.neural_network import MLPClassifier, S
 from sklearn.metrics import accuracy_score
 
 # Load your dataset into a pandas DataFrame

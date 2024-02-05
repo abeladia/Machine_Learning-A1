@@ -6,13 +6,13 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 
-# Load your dataset into a pandas DataFrame
-# Replace 'your_dataset.csv' with the actual filename
-df = pd.read_csv('your_dataset.csv')
+train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-wisconsin-data.csv'
 
-# Assuming the target variable is named 'diagnosis'
-X = df.drop('diagnosis', axis=1)
-y = df['diagnosis']
+df = pd.read_csv(train_data)
+train_data= df.drop(columns=['id'],axis=1)
+train_data["diagnosis"] = train_data["diagnosis"].replace({'M':1,'B':0})
+
+X,y = df.drop(['diagnosis'], axis = 1), df['diagnosis']
 
 # Standardize features (important for SVM)
 scaler = StandardScaler()
@@ -36,16 +36,31 @@ plt.title('SVM Learning Curve')
 plt.legend()
 plt.show()
 
-# Validation Curve
-kernel_range = ['linear', 'poly', 'rbf', 'sigmoid']  # Adjust the range based on your needs
-train_scores, test_scores = validation_curve(svm_model, X_train, y_train, param_name='kernel', param_range=kernel_range, cv=5, scoring='accuracy')
+# Validation Curve for 'linear' kernel
+svm_model1 = SVC(C=.1, degree=2, random_state=42)
+param_range = np.logspace(-3, 3, 6)
+train_scores, test_scores = validation_curve(svm_model1, X_train, y_train, param_name='C', param_range=param_range, cv=5, scoring='accuracy')
 
 plt.figure(figsize=(10, 6))
-plt.plot(kernel_range, np.mean(train_scores, axis=1), label='Training Score')
-plt.plot(kernel_range, np.mean(test_scores, axis=1), label='Cross-validation Score')
-plt.xlabel('Kernel')
+plt.plot(param_range, np.mean(train_scores, axis=1), label='Training Score')
+plt.plot(param_range, np.mean(test_scores, axis=1), label='Cross-validation Score')
+plt.xscale('log')  # Use log scale for better visualization
+plt.xlabel('Regularization Parameter (C)')
 plt.ylabel('Accuracy Score')
-plt.title('SVM Validation Curve')
+plt.title('SVM Validation Curve - Linear Kernel')
 plt.legend()
 plt.show()
 
+# Validation Curve for 'rbf' kernel
+param_range = np.logspace(-3, 3, 6)
+train_scores, test_scores = validation_curve(svm_model1, X_train, y_train, param_name='C', param_range=param_range, cv=5, scoring='accuracy')
+
+plt.figure(figsize=(10, 6))
+plt.plot(param_range, np.mean(train_scores, axis=1), label='Training Score')
+plt.plot(param_range, np.mean(test_scores, axis=1), label='Cross-validation Score')
+plt.xscale('log')  # Use log scale for better visualization
+plt.xlabel('Regularization Parameter (C)')
+plt.ylabel('Accuracy Score')
+plt.title('SVM Validation Curve - RBF Kernel')
+plt.legend()
+plt.show()
