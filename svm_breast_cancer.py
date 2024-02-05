@@ -51,9 +51,9 @@ plt.title('SVM Validation Curve - Linear Kernel')
 plt.legend()
 plt.show()
 
-# Validation Curve for 'rbf' kernel
+# Validation Curve for 'sigmoid' kernel
 param_range = np.logspace(-3, 3, 6)
-train_scores, test_scores = validation_curve(svm_model1, X_train, y_train, param_name='C', param_range=param_range, cv=5, scoring='accuracy')
+train_scores, test_scores = validation_curve(svm_model, X_train, y_train, param_name='C', param_range=param_range, cv=5, scoring='accuracy')
 
 plt.figure(figsize=(10, 6))
 plt.plot(param_range, np.mean(train_scores, axis=1), label='Training Score')
@@ -61,6 +61,6 @@ plt.plot(param_range, np.mean(test_scores, axis=1), label='Cross-validation Scor
 plt.xscale('log')  # Use log scale for better visualization
 plt.xlabel('Regularization Parameter (C)')
 plt.ylabel('Accuracy Score')
-plt.title('SVM Validation Curve - RBF Kernel')
+plt.title('SVM Validation Curve - Sigmoid Kernel')
 plt.legend()
 plt.show()
