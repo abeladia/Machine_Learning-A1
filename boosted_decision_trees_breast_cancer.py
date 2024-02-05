@@ -19,7 +19,7 @@ X,y = df.drop(['diagnosis'], axis = 1), df['diagnosis']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Define the base decision tree model for AdaBoost
-base_dt_model = DecisionTreeClassifier(max_depth=3)
+base_dt_model = DecisionTreeClassifier(max_depth=2)
 
 # Define a range of hyperparameters to test
 n_estimators_range = [25, 50, 100, 200]
@@ -99,16 +99,17 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-# Define the base decision tree model for AdaBoost\
-base_dt_model = base_dt_model.fit(X_train, y_train)
-y_predict_pruned = base_dt_model.predict(X_test)
+# Define the base decision tree model for AdaBoost
+base_dt = AdaBoostClassifier(base_dt_model)
+base_dt = base_dt.fit(X_train, y_train)
+y_predict_pruned = base_dt.predict(X_test)
 
 # Define the AdaBoost model
-adaboost_model = AdaBoostClassifier(base_dt_model, random_state=42, n_estimators=25, learning_rate=1)
-adaboost_model = adaboost_model.fit(X_train, y_train)
-y_predict_boost = adaboost_model.predict(X_test)
+adaboost_model_tuned = AdaBoostClassifier(base_dt_model, n_estimators=200, learning_rate=.01)
+adaboost_model_tuned = adaboost_model_tuned.fit(X_train, y_train)
+y_predict_boost = adaboost_model_tuned.predict(X_test)
 
-target_names = ['Normal', 'Diabetes']
+target_names = ['Malignant', 'Benign']
 print("Decision tree:")
 print(classification_report(y_test, y_predict_pruned, target_names=target_names))
 print("Boost Decision tree:")
@@ -119,28 +120,37 @@ plt.figure(figsize=(12, 6))
 train_sizes, train_scores, test_scores = learning_curve(
     base_dt_model, X_train, y_train, cv=5, scoring='accuracy', train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=-1
 )
-train_sizes2, train_scores2, test_scores = learning_curve(
-    adaboost_model, X_train, y_train, cv=5, scoring='accuracy', train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=-1
+train_sizes2, train_scores2, test_scores2 = learning_curve(
+    adaboost_model_tuned, X_train, y_train, cv=5, scoring='accuracy', train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=-1
 )
 
 # Calculate mean and standard deviation of accuracy scores
 train_accuracy_mean = np.mean(train_scores, axis=1)
 train_accuracy_std = np.std(train_scores, axis=1)
+
 train_accuracy_mean2 = np.mean(train_scores2, axis=1)
 train_accuracy_std2 = np.std(train_scores2, axis=1)
-test_accuracy_mean = np.mean(test_scores, axis=1)
-test_accuracy_std = np.std(test_scores, axis=1)
+
+test_accuracy_mean1 = np.mean(test_scores, axis=1)
+test_accuracy_std1 = np.std(test_scores, axis=1)
+
+test_accuracy_mean = np.mean(test_scores2, axis=1)
+test_accuracy_std = np.std(test_scores2, axis=1)
 
 # Plotting Learning Curve
 plt.subplot(1, 2, 1)
-plt.plot(train_sizes, train_accuracy_mean, label="Training Accuracy of DT", color="darkorange", marker='o')
-plt.fill_between(train_sizes, train_accuracy_mean - train_accuracy_std, train_accuracy_mean + train_accuracy_std, alpha=0.1, color="r")
+#plt.plot(train_sizes, train_accuracy_mean, label="Training Accuracy of AdaBoost", color="darkorange", marker='o')
+#plt.fill_between(train_sizes, train_accuracy_mean - train_accuracy_std, train_accuracy_mean + train_accuracy_std, alpha=0.1, color="r")
 
-plt.plot(train_sizes, train_accuracy_mean2, label='Training Accuracy with AdaBoost',color="magenta", marker='o')
-plt.fill_between(train_sizes, train_accuracy_mean2 - train_accuracy_std2, train_accuracy_mean2 + train_accuracy_std2, alpha=0.1, color="b")
+plt.plot(train_sizes, train_accuracy_mean2, label='Training Accuracy with AdaBoost-tuned',color="magenta", marker='o')
+#plt.fill_between(train_sizes, train_accuracy_mean2 - train_accuracy_std2, train_accuracy_mean2 + train_accuracy_std2, alpha=0.1, color="m")
 
-plt.plot(train_sizes, test_accuracy_mean, label="Cross-validation Accuracy", color="navy", marker='o')
-plt.fill_between(train_sizes, test_accuracy_mean - test_accuracy_std, test_accuracy_mean + test_accuracy_std, alpha=0.1, color="g")
+plt.plot(train_sizes, test_accuracy_mean, label="Cross-validation Accuracy of AdaBoost-tuned", color="navy", marker='o')
+#plt.fill_between(train_sizes, test_accuracy_mean - test_accuracy_std, test_accuracy_mean + test_accuracy_std, alpha=0.1, color="b")
+
+#plt.plot(train_sizes, test_accuracy_mean, label="Cross-validation Accuracy of AdaBoost", color="red", marker='o')
+#plt.fill_between(train_sizes, test_accuracy_mean1 - test_accuracy_std1, test_accuracy_mean1 + test_accuracy_std1, alpha=0.1, color="g")
+
 
 plt.xlabel('Training Size')
 plt.ylabel('Accuracy')

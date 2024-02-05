@@ -108,11 +108,11 @@ plt.figure(figsize=(10, 6))
 train_sizes, train_scores, test_scores = learning_curve(
     dt_model, X_train, y_train, cv=5, scoring='accuracy', train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=-1
 )
-train_sizes2, train_scores2, test_scores = learning_curve(
+train_sizes2, train_scores2, test_scores2 = learning_curve(
     dt_model_pruned, X_train, y_train, cv=5, scoring='accuracy', train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=-1
 )
 
-train_sizes3, train_scores3, test_scores = learning_curve(
+train_sizes3, train_scores3, test_scores3 = learning_curve(
     dt_model_post_pruned, X_train, y_train, cv=5, scoring='accuracy', train_sizes=np.linspace(0.1, 1.0, 10), n_jobs=-1
 )
 
@@ -126,17 +126,19 @@ train_accuracy_std2 = np.std(train_scores2, axis=1)
 train_accuracy_mean3 = np.mean(train_scores3, axis=1)
 train_accuracy_std3 = np.std(train_scores3, axis=1)
 
-test_accuracy_mean = np.mean(test_scores, axis=1)
-test_accuracy_std = np.std(test_scores, axis=1)
+test_accuracy_mean = np.mean(test_scores3, axis=1)
+test_accuracy_std = np.std(test_scores3, axis=1)
 
-# Plotting
-plt.plot(train_sizes, train_accuracy_mean, label='Training Accuracy', marker='o')
-plt.fill_between(train_sizes, train_accuracy_mean - train_accuracy_std, train_accuracy_mean + train_accuracy_std, alpha=0.1, color="r")
+# # Plotting
+# plt.plot(train_sizes, train_accuracy_mean, label='Training Accuracy', marker='o')
+# plt.fill_between(train_sizes, train_accuracy_mean - train_accuracy_std, train_accuracy_mean + train_accuracy_std, alpha=0.1, color="r")
 plt.plot(train_sizes, train_accuracy_mean2, label='Training Accuracy with max-depth optimized', marker='o')
 plt.fill_between(train_sizes, train_accuracy_mean2 - train_accuracy_std2, train_accuracy_mean2 + train_accuracy_std2, alpha=0.1, color="b")
-plt.plot(train_sizes, train_accuracy_mean2, label='Training Accuracy with cost-complexity optimized', marker='o')
-plt.fill_between(train_sizes, train_accuracy_mean2 - train_accuracy_std3, train_accuracy_mean3 + train_accuracy_std3, alpha=0.1, color="m")
-plt.plot(train_sizes, test_accuracy_mean, label='Testing Accuracy', marker='o')
+# plt.plot(train_sizes, train_accuracy_mean2, label='Training Accuracy with cost-complexity optimized', marker='o')
+# plt.fill_between(train_sizes, train_accuracy_mean2 - train_accuracy_std3, train_accuracy_mean3 + train_accuracy_std3, alpha=0.1, color="m")
+
+
+plt.plot(train_sizes, test_accuracy_mean, label='Cross Validation Accuracy', marker='o')
 plt.fill_between(train_sizes, test_accuracy_mean - test_accuracy_std, test_accuracy_mean + test_accuracy_std, alpha=0.1, color="g")
 
 plt.xlabel('Training Size')
