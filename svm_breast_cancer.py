@@ -22,7 +22,7 @@ X_scaled = scaler.fit_transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
 # Define the SVM model
-svm_model = SVC(C=.1, degree=2, kernel='linear', random_state=42)
+svm_model = SVC(C=.1, degree=2, kernel='sigmoid', random_state=42)
 
 # Learning Curve
 train_sizes, train_scores, test_scores = learning_curve(svm_model, X_train, y_train, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring='accuracy')
@@ -37,7 +37,7 @@ plt.legend()
 plt.show()
 
 # Validation Curve for 'linear' kernel
-svm_model1 = SVC(C=.1, degree=2, random_state=42)
+svm_model1 = SVC(C=.1, kernel='linear', degree=2, random_state=42)
 param_range = np.logspace(-3, 3, 6)
 train_scores, test_scores = validation_curve(svm_model1, X_train, y_train, param_name='C', param_range=param_range, cv=5, scoring='accuracy')
 
@@ -53,7 +53,8 @@ plt.show()
 
 # Validation Curve for 'sigmoid' kernel
 param_range = np.logspace(-3, 3, 6)
-train_scores, test_scores = validation_curve(svm_model, X_train, y_train, param_name='C', param_range=param_range, cv=5, scoring='accuracy')
+svm_model2 = SVC(C=.1, kernel='sigmoid', degree=2, random_state=42)
+train_scores, test_scores = validation_curve(svm_model2, X_train, y_train, param_name='C', param_range=param_range, cv=5, scoring='accuracy')
 
 plt.figure(figsize=(10, 6))
 plt.plot(param_range, np.mean(train_scores, axis=1), label='Training Score')
