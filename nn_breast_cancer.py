@@ -7,15 +7,19 @@ from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.preprocessing import LabelEncoder
 
 # Load your dataset into a pandas DataFrame
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-wisconsin-data.csv'
 
 df = pd.read_csv(train_data)
 train_data= df.drop(columns=['id'],axis=1)
-train_data["diagnosis"] = train_data["diagnosis"].replace({'M':1,'B':0})
+label_encoder = LabelEncoder()
+df["diagnosis"] = label_encoder.fit_transform(df["diagnosis"])
+# train_data["diagnosis"] = train_data["diagnosis"].map({'M': 1, 'B': 0})
 
 X,y = df.drop(['diagnosis'], axis = 1), df['diagnosis']
+
 
 # Standardize features (important for neural networks)
 scaler = StandardScaler()
@@ -25,34 +29,29 @@ X_scaled = scaler.fit_transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
 
-# Build the Neural Network model using Keras Sequential API
+# Define the Neural Network model with early stopping
 model = Sequential()
-model.add(Dense(units=10, activation='relu', input_dim=X_train.shape[1]))
+model.add(Dense(50, input_dim=X_train.shape[1], activation='relu'))
 model.add(Dense(units=3, activation='relu'))
 model.add(Dense(units=1, activation='sigmoid'))
 
-# Compile the model
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='adam',loss='binary_crossentropy', metrics=['accuracy'])
 
 # Set up early stopping
 early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 
 # Train the model
-history = model.fit(
-    X_train, y_train, epochs=40, batch_size=32,
-    validation_data=(X_test, y_test), callbacks=[early_stopping]
-)
+history = model.fit(X_train, y_train, epochs=40, batch_size=32, validation_data=(X_test, y_test), callbacks=[early_stopping])
 
-# Plot training and validation loss curves
+# Plot training and validation loss
 plt.figure(figsize=(10, 6))
 plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')
 plt.xlabel('Epochs')
 plt.ylabel('Loss')
-plt.title('Training and Validation Loss Curves')
+plt.title('Neural Network Training and Validation Loss')
 plt.legend()
 plt.show()
-
 
 # Define the Neural Network model
 mlp_model = MLPClassifier(activation='relu', alpha=0.0001, hidden_layer_sizes=(50,), learning_rate='constant', random_state=42)
