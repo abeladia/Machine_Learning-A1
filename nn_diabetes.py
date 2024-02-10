@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.metrics import classification_report
 
 # Load your dataset into a pandas DataFrame
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv'
@@ -53,6 +54,11 @@ plt.show()
 
 # Define the Neural Network model
 mlp_model = MLPClassifier(activation='relu', alpha=0.0001, hidden_layer_sizes=(10,3), learning_rate='constant', random_state=42)
+
+mlp_model = mlp_model.fit(X_train, y_train)
+y_predict = mlp_model.predict(X_test)
+print("Report:")
+print(classification_report(y_test, y_predict))
 
 # Learning Curve
 train_sizes, train_scores, test_scores = learning_curve(mlp_model, X_train, y_train, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring='accuracy')

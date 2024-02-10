@@ -8,6 +8,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report
 
 # Load your dataset into a pandas DataFrame
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-wisconsin-data.csv'
@@ -55,6 +56,10 @@ plt.show()
 
 # Define the Neural Network model
 mlp_model = MLPClassifier(activation='relu', alpha=0.0001, hidden_layer_sizes=(50,), learning_rate='constant', random_state=42)
+mlp_model = mlp_model.fit(X_train, y_train)
+y_predict = mlp_model.predict(X_test)
+print("Report:")
+print(classification_report(y_test, y_predict))
 
 # Learning Curve
 train_sizes, train_scores, test_scores = learning_curve(mlp_model, X_train, y_train, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring='accuracy')
@@ -67,6 +72,7 @@ plt.ylabel('Accuracy Score')
 plt.title('Neural Network Learning Curve')
 plt.legend()
 plt.show()
+
 
 # Learning Curve with max_iter variation
 max_iter_range = [50, 100, 200, 400]

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import learning_curve, validation_curve, train_test_split
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
 
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv'
 
@@ -20,6 +21,12 @@ X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.8, 
 #
 # Define the SVM model
 svm_model = SVC(C=1, degree=2, kernel='rbf', random_state=42)
+
+random_forest_model = svm_model.fit(X_train, y_train)
+y_predict = svm_model.predict(X_test)
+print("Report:")
+print(classification_report(y_test, y_predict))
+
 # Learning Curve
 train_sizes, train_scores, test_scores = learning_curve(svm_model, X_train, y_train, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring='accuracy')
 plt.figure(figsize=(10, 6))

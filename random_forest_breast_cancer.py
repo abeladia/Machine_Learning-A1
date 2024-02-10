@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import learning_curve, validation_curve, train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
 
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-wisconsin-data.csv'
 
@@ -17,6 +17,11 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # Define the Random Forest model
 random_forest_model = RandomForestClassifier(max_depth=2, n_estimators=2000, random_state=42)
+
+random_forest_model = random_forest_model.fit(X_train, y_train)
+y_predict = random_forest_model.predict(X_test)
+print("Report:")
+print(classification_report(y_test, y_predict))
 
 # Learning Curve
 train_sizes, train_scores, test_scores = learning_curve(random_forest_model, X_train, y_train, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring='accuracy')
