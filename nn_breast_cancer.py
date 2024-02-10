@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import learning_curve, validation_curve, train_test_split
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.callbacks import EarlyStopping
 
 # Load your dataset into a pandas DataFrame
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-wisconsin-data.csv'
@@ -21,6 +24,36 @@ X_scaled = scaler.fit_transform(X)
 # Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
+
+# Build the Neural Network model using Keras Sequential API
+model = Sequential()
+model.add(Dense(units=10, activation='relu', input_dim=X_train.shape[1]))
+model.add(Dense(units=3, activation='relu'))
+model.add(Dense(units=1, activation='sigmoid'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Set up early stopping
+early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+
+# Train the model
+history = model.fit(
+    X_train, y_train, epochs=40, batch_size=32,
+    validation_data=(X_test, y_test), callbacks=[early_stopping]
+)
+
+# Plot training and validation loss curves
+plt.figure(figsize=(10, 6))
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Training and Validation Loss Curves')
+plt.legend()
+plt.show()
+
+
 # Define the Neural Network model
 mlp_model = MLPClassifier(activation='relu', alpha=0.0001, hidden_layer_sizes=(50,), learning_rate='constant', random_state=42)
 
@@ -33,6 +66,21 @@ plt.plot(train_sizes, np.mean(test_scores, axis=1), label='Cross-validation Scor
 plt.xlabel('Training Set Size')
 plt.ylabel('Accuracy Score')
 plt.title('Neural Network Learning Curve')
+plt.legend()
+plt.show()
+
+# Learning Curve with max_iter variation
+max_iter_range = [50, 100, 200, 400]
+plt.figure(figsize=(10, 6))
+
+for max_iter in max_iter_range:
+    mlp_model.set_params(max_iter=max_iter)
+    train_sizes, train_scores, test_scores = learning_curve(mlp_model, X_train, y_train, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring='accuracy')
+    plt.plot(np.mean(train_scores, axis=1), label=f'Training Curve (max_iter={max_iter})')
+
+plt.xlabel('Number of Training Examples')
+plt.ylabel('Accuracy Score')
+plt.title('Neural Network Learning Curve - Iterations')
 plt.legend()
 plt.show()
 
