@@ -5,6 +5,7 @@ from sklearn.model_selection import learning_curve, validation_curve, train_test
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report
+import time
 
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv'
 
@@ -22,7 +23,12 @@ X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.8, 
 # Define the SVM model
 svm_model = SVC(C=1, degree=2, kernel='rbf', random_state=42)
 
+# Fit the model
+start_time = time.time()
 random_forest_model = svm_model.fit(X_train, y_train)
+training_time = time.time() - start_time
+print(training_time)
+
 y_predict = svm_model.predict(X_test)
 print("Report:")
 print(classification_report(y_test, y_predict))

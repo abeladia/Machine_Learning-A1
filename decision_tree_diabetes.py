@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split, learning_curve
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-
+from sklearn.metrics import classification_report, accuracy_score
+import time
 from matplotlib import pyplot as plt
 
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv'
@@ -86,7 +86,13 @@ dt_model = dt_model.fit(X_train, y_train)
 y_predict = dt_model.predict(X_test)
 
 dt_model_pruned = DecisionTreeClassifier(max_depth=8)
+
+# Fit the model
+start_time = time.time()
 dt_model_pruned = dt_model_pruned.fit(X_train, y_train)
+training_time = time.time() - start_time
+print(training_time)
+
 y_predict_pruned = dt_model_pruned.predict(X_test)
 
 dt_model_post_pruned = DecisionTreeClassifier(ccp_alpha=.015)

@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import learning_curve, validation_curve, train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
+from sklearn.preprocessing import StandardScaler
+import time
 
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-wisconsin-data.csv'
 
@@ -13,14 +15,20 @@ train_data["diagnosis"] = train_data["diagnosis"].replace({'M':1,'B':0})
 
 X,y = df.drop(['diagnosis'], axis = 1), df['diagnosis']
 
+# Standardize features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
 # Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Define the KNN model
-knn_model = KNeighborsClassifier(n_neighbors=2, weights='uniform')
-
+knn_model = KNeighborsClassifier(n_neighbors=2, weights='uniform', metric='minkowski')
 # Fit the model
+start_time = time.time()
 knn_model.fit(X_train, y_train)
+training_time = time.time() - start_time
+print(training_time)
 
 # Predict on the test set
 y_predict_knn = knn_model.predict(X_test)

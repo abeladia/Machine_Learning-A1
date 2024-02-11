@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import learning_curve, validation_curve, train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
+from sklearn.preprocessing import StandardScaler
+import time
 
 # Load your dataset into a pandas DataFrame
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv'
@@ -12,14 +14,21 @@ df = pd.read_csv(train_data)
 
 X,y = df.drop(['Diabetes_binary'], axis = 1), df['Diabetes_binary']
 
+# Standardize features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
 # Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, random_state=42)
 
 # Define the KNN model
-knn_model = KNeighborsClassifier(n_neighbors=9, weights='uniform')
+knn_model = KNeighborsClassifier(n_neighbors=17, weights='uniform', metric='manhattan')
 
 # Fit the model
+start_time = time.time()
 knn_model.fit(X_train, y_train)
+training_time = time.time() - start_time
+print(training_time)
 
 # Predict on the test set
 y_predict_knn = knn_model.predict(X_test)

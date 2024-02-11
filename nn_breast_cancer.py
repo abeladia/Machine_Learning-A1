@@ -9,6 +9,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report
+import time
 
 # Load your dataset into a pandas DataFrame
 train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-wisconsin-data.csv'
@@ -20,7 +21,6 @@ df["diagnosis"] = label_encoder.fit_transform(df["diagnosis"])
 # train_data["diagnosis"] = train_data["diagnosis"].map({'M': 1, 'B': 0})
 
 X,y = df.drop(['diagnosis'], axis = 1), df['diagnosis']
-
 
 # Standardize features (important for neural networks)
 scaler = StandardScaler()
@@ -56,7 +56,12 @@ plt.show()
 
 # Define the Neural Network model
 mlp_model = MLPClassifier(activation='relu', alpha=0.0001, hidden_layer_sizes=(50,), learning_rate='constant', random_state=42)
+
+start_time = time.time()
 mlp_model = mlp_model.fit(X_train, y_train)
+training_time = time.time() - start_time
+print(training_time)
+
 y_predict = mlp_model.predict(X_test)
 print("Report:")
 print(classification_report(y_test, y_predict))
