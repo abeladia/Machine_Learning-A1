@@ -7,6 +7,7 @@ Breast Cancer Dataset: https://www.kaggle.com/datasets/abhinavmangalore/breast-c
 The algorithms are concatenated with the datasets for ease of use.
 
 For Example:
-In order to recreate the SVM curves for diabetes
+In order to recreate the SVM curves for diabetes:
+
 Run [svm_diabetes.py](svm_diabetes.py) script to print the results
 
