@@ -11,6 +11,6 @@ The algorithms are concatenated with the datasets for ease of use.
 For Example:
 
 In order to recreate the SVM curves for diabetes:
-
-Run [svm_diabetes.py](svm_diabetes.py) script to print the results
+1. Install the packages from the requirements.txt
+2. Run [svm_diabetes.py](svm_diabetes.py) script to print the results
 
