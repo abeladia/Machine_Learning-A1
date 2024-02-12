@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 import time
 
-train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/breast-cancer-wisconsin-data.csv'
+train_data = './sample_data/breast-cancer-wisconsin-data.csv'
 
 df = pd.read_csv(train_data)
 train_data= df.drop(columns=['id'],axis=1)

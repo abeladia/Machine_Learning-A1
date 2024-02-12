@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report
 import time
 
-train_data = '/Users/anishabeladia/IdeaProjects/ML-A1/sample_data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv'
+train_data = './sample_data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv'
 
 df = pd.read_csv(train_data)
 
